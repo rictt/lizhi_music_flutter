@@ -4,6 +4,7 @@ import 'package:lizhi_music_flutter/components/play_list_panel/play_list_panel.d
 import 'package:lizhi_music_flutter/constants/constants.dart';
 import 'package:lizhi_music_flutter/model/Song.dart';
 import 'package:lizhi_music_flutter/provider/global_provider.dart';
+import 'package:lizhi_music_flutter/utils/prefs.dart';
 import 'package:lizhi_music_flutter/utils/song_player.dart';
 import 'package:provider/provider.dart';
 

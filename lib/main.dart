@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lizhi_music_flutter/pages/home/home.dart';
 import 'package:lizhi_music_flutter/provider/global_provider.dart';
+import 'package:lizhi_music_flutter/utils/prefs.dart';
 import 'package:lizhi_music_flutter/utils/song_player.dart';
 import 'package:lizhi_music_flutter/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await MusicSourceUtils.init();
   await SongPlayer.init();
+  await Prefs.init();
   runApp(const MyApp());
 }
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lizhi_music_flutter/model/Album.dart';
 import 'package:lizhi_music_flutter/model/Song.dart';
 import 'package:lizhi_music_flutter/utils/event.dart';
+import 'package:lizhi_music_flutter/utils/prefs.dart';
 import 'package:lizhi_music_flutter/utils/song_player.dart';
 import 'package:lizhi_music_flutter/utils/utils.dart';
 
@@ -27,8 +28,8 @@ enum PlayMode {
 class GlobalProvider with ChangeNotifier {
   // 正在播放的歌曲、播放状态、播放时长、歌单列表
   List<Album> albumList = MusicSourceUtils.albums;
-  Song? currentSong;
-  List<Song> playList = [];
+  Song? currentSong = Prefs.getCurrentSong();
+  List<Song> playList = Prefs.getPlayList();
   bool isPlaying = false;
   // PlayerState state = PlayerState.stopped;
   SongState songState = SongState.stopped;
@@ -63,6 +64,8 @@ class GlobalProvider with ChangeNotifier {
     if (!hasSameSong) {
       playList.insert(0, song);
     }
+    Prefs.setCurrentSong(song);
+    Prefs.setPlayList(playList);
     notifyListeners();
   }
 
@@ -78,6 +81,7 @@ class GlobalProvider with ChangeNotifier {
     }).toList();
     // 去重
     playList = uniqueList;
+    Prefs.setPlayList(list);
     notifyListeners();
   }
 
