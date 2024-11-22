@@ -33,8 +33,8 @@ class AlbumItem extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(4.0),
             child: Container(
-              width: 200,
-              height: 200,
+              width: coverWidth,
+              height: coverHeight,
               color: Colors.grey,
               child: CachedNetworkImage(
                 imageUrl: album.cover,

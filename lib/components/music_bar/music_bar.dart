@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lizhi_music_flutter/components/music_popup_route/music_popup_route.dart';
+import 'package:lizhi_music_flutter/components/play_list_panel/play_list_panel.dart';
 import 'package:lizhi_music_flutter/constants/constants.dart';
 import 'package:lizhi_music_flutter/model/Song.dart';
 import 'package:lizhi_music_flutter/provider/global_provider.dart';
@@ -22,7 +24,6 @@ class _MusicBar extends State<MusicBar> with SingleTickerProviderStateMixin {
       duration: const Duration(seconds: 30),
       vsync: this
     );
-    _controller.repeat();
   }
 
   @override
@@ -30,13 +31,25 @@ class _MusicBar extends State<MusicBar> with SingleTickerProviderStateMixin {
     _controller.dispose();
     super.dispose();
   }
+
+
+  void showPlayList() {
+    Navigator.of(context).push(
+      MusicPopupRoute(
+        slideTransitionFrom: SlideTransitionFrom.bottom,
+        builder: (context) {
+          return PlayListPanel();
+        }
+      )
+    );
+  }
   
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
 
     BorderSide borderSide = BorderSide(color: theme.splashColor, width: 0.5);
-    GlobalProvider globalProvider = Provider.of<GlobalProvider>(context);
+    GlobalProvider globalProvider = Provider.of<GlobalProvider>(context, listen: true);
     SongState state = globalProvider.songState;
     bool isBuffering = state == SongState.buffering;
     bool isPlaying = state == SongState.playing;
@@ -77,6 +90,11 @@ class _MusicBar extends State<MusicBar> with SingleTickerProviderStateMixin {
             ),
           const SizedBox(width: 10,),
           const Icon(Icons.skip_next_rounded, size: 40, color: Colors.black87,),
+          const SizedBox(width: 10,),
+          GestureDetector(
+            onTap: () => showPlayList(),
+            child: const Icon(Icons.menu_rounded, size: 28, color: Colors.black87,),
+          )
         ],
       )
     );
@@ -86,6 +104,7 @@ class _MusicBar extends State<MusicBar> with SingleTickerProviderStateMixin {
     if (currentSong == null) {
       return;
     }
+    _controller.forward();
     SongPlayer.play(currentSong.songUrl);
   }
 
@@ -93,22 +112,20 @@ class _MusicBar extends State<MusicBar> with SingleTickerProviderStateMixin {
     if (currentSong == null) {
       return;
     }
+    _controller.stop();
     SongPlayer.paused();
     GlobalProvider globalProvider = Provider.of<GlobalProvider>(context, listen: false);
     globalProvider.setSongState(SongState.paused);
   }
 
   Widget _buildRotationImage(bool isPlay) {
+    if (isPlay && _controller.status == AnimationStatus.dismissed) {
+      _controller.forward();
+    }
     Widget child = ClipRRect(
       borderRadius: BorderRadius.circular(100),
       child: Image.asset("assets/images/lizhi.png", width: 60, height: 90, fit: BoxFit.cover,),
     );
-    if (isPlay) {
-      return RotationTransition(
-        turns: _controller, 
-        child: child,
-      );
-    }
-    return child;
+    return RotationTransition(turns: _controller, child: child,);
   }
 }

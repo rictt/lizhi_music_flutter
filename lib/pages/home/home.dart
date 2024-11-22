@@ -27,13 +27,27 @@ class _Home extends State<Home> {
       appBarTitle: "Hi, Lizhi",
       child: Column(
         children: [
-          _buildAlbumList(),
+          _buildAlbumList()
         ],
       )
     );
   }
   
   Widget _buildAlbumList() {
+    return Container(
+      width: double.maxFinite,
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 14.0),
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        runSpacing: 10.0,
+        direction: Axis.horizontal,
+        children: [
+          ...albums.map((e) {
+            return _buildAlbumItem(e);
+          })
+        ],
+      )
+    );
     return Container(
       height: 320,
       padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 10.0),
@@ -51,7 +65,7 @@ class _Home extends State<Home> {
           Expanded(
             child: ListView.separated(itemBuilder: (context, index) {
               return _buildAlbumItem(albums[index]);
-            }, itemCount: albums.length, scrollDirection: Axis.horizontal, separatorBuilder: (context, index) {
+            }, itemCount: albums.length, scrollDirection: Axis.vertical, separatorBuilder: (context, index) {
               return const SizedBox(width: 10.0,);
             })
           ),
@@ -62,6 +76,8 @@ class _Home extends State<Home> {
   }
 
   Widget _buildAlbumItem(Album album) {
-    return AlbumItem(album: album);
+    MediaQueryData data = MediaQuery.of(context);
+    double w = (data.size.width - 20 - 10) / 2;
+    return AlbumItem(album: album, coverWidth: w, coverHeight: w,);
   }
 }

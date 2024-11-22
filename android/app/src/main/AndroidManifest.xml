@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.lizhi_music_flutter">
    <application
-        android:label="lizhi_music_flutter"
+        android:label="LiZhi"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

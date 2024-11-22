@@ -2,12 +2,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lizhi_music_flutter/components/album_item/album_item.dart';
 import 'package:lizhi_music_flutter/components/music_bar_scaffold/music_bar_scaffold.dart';
 import 'package:lizhi_music_flutter/model/Album.dart';
 import 'package:lizhi_music_flutter/model/Song.dart';
 import 'package:lizhi_music_flutter/provider/global_provider.dart';
 import 'package:lizhi_music_flutter/utils/song_player.dart';
+import 'package:lizhi_music_flutter/utils/user_toast.dart';
 import 'package:lizhi_music_flutter/utils/utils.dart';
 import 'package:provider/provider.dart';
 
@@ -121,6 +123,24 @@ class _AlbumDetail extends State<AlbumDetail> {
     );
   }
 
+  void onClickPlay() {
+    Song song = songs[0];
+    SongPlayer.play(song.songUrl);
+    GlobalProvider globalProvider = Provider.of<GlobalProvider>(context, listen: false);
+    globalProvider.setCurrentSong(song);
+    onAddToPlayList(false);
+  }
+
+  void onAddToPlayList(bool showToast) {
+    GlobalProvider globalProvider = Provider.of<GlobalProvider>(context, listen: false);
+    List<Song> playList = globalProvider.playList;
+    playList.addAll(songs);
+    globalProvider.setPlayList(playList);
+    if (showToast) {
+      UserToast.showToast("加入列表成功");
+    }
+  }
+
   Widget _buildHeader() {
     return Column(
       children: [
@@ -136,9 +156,9 @@ class _AlbumDetail extends State<AlbumDetail> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Expanded(flex: 1, child: _buildButton("播放", Icons.play_arrow_rounded)),
+              Expanded(flex: 1, child: _buildButton("播放", Icons.play_arrow_rounded, onClickPlay)),
               const SizedBox(width: 10.0,),
-              Expanded(flex: 1, child: _buildButton("随机播放", Icons.music_note)),
+              Expanded(flex: 1, child: _buildButton("播放列表", Icons.playlist_add_rounded, () => onAddToPlayList(true))),
             ],
           ),
         )
@@ -147,8 +167,11 @@ class _AlbumDetail extends State<AlbumDetail> {
     );
   }
 
-  Widget _buildButton(String text, IconData icon) {
+  Widget _buildButton(String text, IconData icon, Function onClick) {
     return GestureDetector(
+      onTap: () {
+        onClick();
+      },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 7.0),
         decoration: BoxDecoration(

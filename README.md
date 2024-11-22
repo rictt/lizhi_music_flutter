@@ -1,16 +1,25 @@
-# lizhi_music_flutter
+# 李志音乐APP
 
-A new Flutter project.
+## 功能
 
-## Getting Started
+## 打包
 
-This project is a starting point for a Flutter application.
+- 打包apk
 
-A few resources to get you started if this is your first Flutter project:
+  ```sh
+  flutter build apk  --no-tree-shake-icons    
+  ```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 其他
+  - iconfont快速生成MyIcons代码
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+    ```js
+    // 在控制台运行
+    copy(Array.from(document.querySelectorAll('.icon-item')).map(e => {
+    let [code, name] = e.querySelectorAll('.icon-code');
+    code = code.innerText.replace(";", "").replace("&#", "0");
+    name = name.title;
+    // return {code, name}
+    return `static IconData ${name} = createMyIcon(${code});`
+}).join(''));
+    ```

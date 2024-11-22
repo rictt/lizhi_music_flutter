@@ -31,12 +31,12 @@ class SongPlayer {
     } else if (state == PlayerState.paused || state == PlayerState.stopped) {
       eventBus.fire(SongPlayingStateChange(SongState.stopped));
     } else if (state == PlayerState.completed) {
-      eventBus.fire(SongPlayingStateChange(SongState.stopped));
+      eventBus.fire(SongPlayingStateChange(SongState.completed));
     }
   }
 
   static play(String url) async {
-    if (url == currentSongUrl || audioPlayer == null) {
+    if (audioPlayer == null) {
       return;
     }
     try {
@@ -61,6 +61,14 @@ class SongPlayer {
   static paused() {
     if (audioPlayer != null) {
       audioPlayer!.pause();
+    }
+  }
+
+  static seek() async {
+    if (audioPlayer != null) {
+      var duration = await audioPlayer!.getDuration() as Duration;
+      int lastTenSeconds = duration.inMilliseconds - 5000;
+      audioPlayer!.seek(Duration(milliseconds: lastTenSeconds));
     }
   }
 
